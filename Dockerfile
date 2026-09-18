@@ -1,5 +1,5 @@
 # Multi-stage build for Ecronabrand PMS Backend
-FROM node:20-alpine as builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -24,11 +24,11 @@ FROM node:20-alpine
 
 WORKDIR /app/backend
 
-# Copy package files
-COPY backend/package*.json ./
+# Copy package files from builder stage (includes generated package-lock.json)
+COPY --from=builder /app/backend/package*.json ./
 
 # Install production dependencies only
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Copy built application from builder
 COPY --from=builder /app/backend/dist ./dist
