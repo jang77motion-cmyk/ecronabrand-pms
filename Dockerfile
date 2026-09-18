@@ -24,8 +24,7 @@ FROM node:20-alpine
 WORKDIR /app/backend
 
 # Copy package files
-COPY backend/package*.json ./
-
+COPY --from=builder /app/backend/package*.json ./
 # Install production dependencies only
 RUN npm ci --omit=dev
 # Copy built application from builder
